@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myblog.blog.dao.FriendsMapper">
+  <resultMap id="BaseResultMap" type="com.myblog.blog.model.Friends">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="authorization" jdbcType="BIT" property="authorization" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, url, title, picture, authorization
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_friends
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_friends
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.myblog.blog.model.Friends">
+    insert into t_friends (id, url, title, 
+      picture, authorization)
+    values (#{id,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{picture,jdbcType=VARCHAR}, #{authorization,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.myblog.blog.model.Friends">
+    insert into t_friends
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="authorization != null">
+        authorization,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="authorization != null">
+        #{authorization,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.myblog.blog.model.Friends">
+    update t_friends
+    <set>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="authorization != null">
+        authorization = #{authorization,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.myblog.blog.model.Friends">
+    update t_friends
+    set url = #{url,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      authorization = #{authorization,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <!--自定义sql-->
+  <!--查询已授权的友联-->
+  <select id="selectAuthorizationFirends" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_friends
+    where `authorization` = 1
+  </select>
+
+  <select id="selectAllFriends" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_friends
+  </select>
+
+  <update id="updateAuthorizationByPrimaryKey">
+    update t_friends
+    set `authorization` = #{status}
+    where id = #{id}
+  </update>
+
+</mapper>
